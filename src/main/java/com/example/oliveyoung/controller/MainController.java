@@ -8,6 +8,6 @@ public class MainController {
 
     @GetMapping()
     public String index() {
-        return "Believe you can,then you will!";
+        return "Believe you can, then you will!";
     }
 }
