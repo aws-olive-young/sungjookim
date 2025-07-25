@@ -1,0 +1,21 @@
+{
+  "family": "olive-infra-task",
+  "networkMode": "awsvpc",
+  "executionRoleArn": "arn:aws:iam::055029753647:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "olive-container",
+      "image": "055029753647.dkr.ecr.ap-northeast-2.amazonaws.com/olive-infra-clione-repo:$SHORT_SHA",
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true
+    }
+  ],
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024"
+}

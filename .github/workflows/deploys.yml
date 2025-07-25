@@ -6,11 +6,11 @@ on:
 
 env:
   AWS_REGION: ap-northeast-2
-  ECR_REPOSITORY: olive-infra-clione-repo # 아까 만든 리포 이름
-  ECR_REGISTRY: 055029753647.dkr.ecr.ap-northeast-2.amazonaws.com # ECR URI 앞부분
+  ECR_REPOSITORY: olive-infra-clione-repo
+  ECR_REGISTRY: 055029753647.dkr.ecr.ap-northeast-2.amazonaws.com
 
 jobs:
-  build-and-push:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,7 +20,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
 
       - name: Grant execute permission for gradlew
@@ -32,7 +32,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} # github에 등록한 액세스 키
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
@@ -48,10 +48,14 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$SHORT_SHA .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$SHORT_SHA
 
-      - name: Deploy to ECS
+      - name: Replace image tag in taskdef.json
+        run: |
+          sed -i "s|\$SHORT_SHA|${SHORT_SHA}|g" taskdef.json
+
+      - name: Deploy to ECS (Fargate)
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: taskdef.json
-          service: your-ecs-service-name
-          cluster: your-ecs-cluster-name
+          service: olive-clone-service
+          cluster: cluster-for-olive-clone
           wait-for-service-stability: true
