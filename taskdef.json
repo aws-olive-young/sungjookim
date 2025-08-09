@@ -1,12 +1,18 @@
 {
   "family": "olive-infra-task",
   "networkMode": "awsvpc",
+  "taskRoleArn": "arn:aws:iam::055029753647:role/olive-clone-DB-role-for-ecs",
   "executionRoleArn": "arn:aws:iam::055029753647:role/ecsTaskExecutionRole",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
   "containerDefinitions": [
     {
       "name": "olive-container",
       "image": "055029753647.dkr.ecr.ap-northeast-2.amazonaws.com/olive-infra-clione-repo:$SHORT_SHA",
-      "portMappings": [{ "containerPort": 8080, "protocol": "tcp" }],
+      "portMappings": [
+        { "containerPort": 8080, "protocol": "tcp" }
+      ],
       "environment": [
         { "name": "REDIS_HOST", "value": "olive-clone-redis-cache-jtd3b4.serverless.apn2.cache.amazonaws.com" },
         { "name": "REDIS_PORT", "value": "6379" },
@@ -14,8 +20,5 @@
       ],
       "essential": true
     }
-  ],
-  "requiresCompatibilities": ["FARGATE"],
-  "cpu": "512",
-  "memory": "1024"
+  ]
 }
