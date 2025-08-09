@@ -6,11 +6,11 @@
     {
       "name": "olive-container",
       "image": "055029753647.dkr.ecr.ap-northeast-2.amazonaws.com/olive-infra-clione-repo:$SHORT_SHA",
-      "portMappings": [
-        {
-          "containerPort": 8080,
-          "protocol": "tcp"
-        }
+      "portMappings": [{ "containerPort": 8080, "protocol": "tcp" }],
+      "environment": [
+        { "name": "REDIS_HOST", "value": "olive-clone-redis-cache-jtd3b4.serverless.apn2.cache.amazonaws.com" },
+        { "name": "REDIS_PORT", "value": "6379" },
+        { "name": "REDIS_SSL", "value": "true" }
       ],
       "essential": true
     }
