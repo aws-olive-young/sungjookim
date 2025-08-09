@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: oliveyoung
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT:6379}
+    ssl: ${REDIS_SSL:true}
